@@ -13,12 +13,15 @@ class ExtraError extends TypeError {
 
 module.exports = function promiseAllSafe (promises) {
   if (!Array.isArray(promises)) {
-    throw new ExtraError('Promises - must be an array', { promises })
+    throw new TypeError('promises - must be an array')
   }
 
   if (!promises.every(isPromise)) {
-    const notPromises = promises.filter(p => !isPromise(p))
-    throw new ExtraError('Promises - must contain only a promises', { argument: promises, notPromises })
+    const explanation = promises.map((p, i) => ({
+      notPromise: p,
+      index: i
+    }).filter(({ promise }) => !isPromise(promise)))
+    throw new ExtraError('promises - must contain only a promises', { explanation })
   }
 
   return Promise.all(
