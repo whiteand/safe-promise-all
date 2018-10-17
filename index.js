@@ -17,10 +17,14 @@ module.exports = function promiseAllSafe (promises, unsafePromiseAll = promises 
   }
 
   if (!promises.every(isPromise)) {
-    const explanation = promises.map((p, i) => ({
+    const populateWithIndexes = (p, i) => ({
       notPromise: p,
       index: i
-    })).filter(({ promise }) => !isPromise(promise)))
+    })
+    const isNotPromise = ({ promise }) => !isPromise(promise)
+    const explanation = promises
+      .map(populateWithIndexes)
+      .filter(isNotPromise)
     throw new ExtraError('promises - must contain only a promises', { explanation })
   }
 
