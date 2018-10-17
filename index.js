@@ -17,7 +17,6 @@ class ExtraError extends TypeError {
 const populateWithIndexes = (element, index) => ({ element, index })
 
 function promiseAllSafe (promises, unsafePromiseAll = promises => Promise.all(promises)) {
-  console.log('something')
   if (!Array.isArray(promises)) {
     throw new TypeError('promises - must be an array')
   }
