@@ -1,7 +1,10 @@
 const isPromise = promise => {
-  return promise
-    && promise.then === 'function'
-    && promise.catch === 'function'
+  const isNotNil = Boolean(promise)
+  const hasThen = typeof promise.then === 'function'
+  const hasCatch = typeof promise.catch === 'function'
+  return Boolean(promise)
+    && hasThen
+    && hasCatch
 }
 
 class ExtraError extends TypeError {
@@ -11,20 +14,19 @@ class ExtraError extends TypeError {
   }
 }
 
-module.exports = function promiseAllSafe (promises, unsafePromiseAll = promises => Promise.all(promises)) {
+const populateWithIndexes = (element, index) => ({ element, index })
+
+function promiseAllSafe (promises, unsafePromiseAll = promises => Promise.all(promises)) {
+  console.log('something')
   if (!Array.isArray(promises)) {
     throw new TypeError('promises - must be an array')
   }
 
   if (!promises.every(isPromise)) {
-    const populateWithIndexes = (p, i) => ({
-      notPromise: p,
-      index: i
-    })
-    const isNotPromise = ({ notPromise }) => !isPromise(notPromise)
+
     const explanation = promises
       .map(populateWithIndexes)
-      .filter(isNotPromise)
+      .filter(({ element }) => !isPromise(element))
     throw new ExtraError('promises - must contain only a promises', { explanation })
   }
 
@@ -36,3 +38,6 @@ module.exports = function promiseAllSafe (promises, unsafePromiseAll = promises 
     )
   )
 }
+
+module.exports = promiseAllSafe
+
