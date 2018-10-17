@@ -20,7 +20,7 @@ module.exports = function promiseAllSafe (promises, unsafePromiseAll = promises 
     const explanation = promises.map((p, i) => ({
       notPromise: p,
       index: i
-    }).filter(({ promise }) => !isPromise(promise)))
+    })).filter(({ promise }) => !isPromise(promise)))
     throw new ExtraError('promises - must contain only a promises', { explanation })
   }
 
