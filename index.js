@@ -7,34 +7,47 @@ const isPromise = promise => {
     && hasCatch
 }
 
-class ExtraError extends TypeError {
-  constructor (message, extra) {
-    super(message)
-    this.extra = extra
-  }
-}
-
 const populateWithIndexes = (element, index) => ({ element, index })
 
+/**
+ * @typedef {{
+ *   result: *,
+ *   error: *
+ * }} Result
+ *
+ * @param {Promise[]}promises
+ * @param {function(Promise[]): Promise} unsafePromiseAll
+ * @returns {*} Promise.<Result[]> - that returns array of results of all promises
+ */
 function promiseAllSafe (promises, unsafePromiseAll = promises => Promise.all(promises)) {
   if (!Array.isArray(promises)) {
-    throw new TypeError('promises - must be an array')
+    throw new TypeError('promises - must be an Promise[]')
+  }
+
+  if (typeof unsafePromiseAll !== 'function') {
+    throw new TypeError('unsafePromiseAll - must be a function(Promise[]): Promise')
   }
 
   if (!promises.every(isPromise)) {
-    const explanation = promises
-      .map(populateWithIndexes)
-      .filter(({ element }) => !isPromise(element))
-    throw new ExtraError('promises - must contain only a promises', { explanation })
+    throw new TypeError('promises - must contain only a promises (Promise[])')
   }
-
-  return unsafePromiseAll(
-    promises.map(
-      promise => promise
-        .then(result => ({ result, error: null }))
-        .catch(error => ({ result: null, error }))
-    )
-  )
+  const safePromises = []
+  for (const promise of promises) {
+    const withThen = promise.then(result => ({ result, error: null }))
+    if (!isPromise(withThen)) {
+      throw new TypeError('promise.then must return a promise')
+    }
+    const withCatch = withThen.catch(error => ({ result: null, error }))
+    if (!isPromise(withCatch)) {
+      throw new TypeError('promise.catch must return a promise')
+    }
+    safePromises.push(withCatch)
+  }
+  const res = unsafePromiseAll(safePromises)
+  if (!isPromise(res)) {
+    throw new TypeError('unsafePromiseAll - must return promise. Must be a function(Promise[]): Promise')
+  }
+  return res
 }
 
 module.exports = promiseAllSafe
