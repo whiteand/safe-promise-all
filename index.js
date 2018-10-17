@@ -21,7 +21,7 @@ module.exports = function promiseAllSafe (promises, unsafePromiseAll = promises 
       notPromise: p,
       index: i
     })
-    const isNotPromise = ({ promise }) => !isPromise(promise)
+    const isNotPromise = ({ notPromise }) => !isPromise(notPromise)
     const explanation = promises
       .map(populateWithIndexes)
       .filter(isNotPromise)
