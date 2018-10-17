@@ -23,7 +23,6 @@ function promiseAllSafe (promises, unsafePromiseAll = promises => Promise.all(pr
   }
 
   if (!promises.every(isPromise)) {
-
     const explanation = promises
       .map(populateWithIndexes)
       .filter(({ element }) => !isPromise(element))
