@@ -11,7 +11,7 @@ class ExtraError extends TypeError {
   }
 }
 
-module.exports = function promiseAllSafe (promises) {
+module.exports = function promiseAllSafe (promises, unsafePromiseAll = promises => Promise.all(promises)) {
   if (!Array.isArray(promises)) {
     throw new TypeError('promises - must be an array')
   }
@@ -24,7 +24,7 @@ module.exports = function promiseAllSafe (promises) {
     throw new ExtraError('promises - must contain only a promises', { explanation })
   }
 
-  return Promise.all(
+  return unsafePromiseAll(
     promises.map(
       promise => promise
         .then(result => ({ result, error: null }))
