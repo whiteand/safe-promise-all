@@ -1,6 +1,6 @@
 {
   "name": "safe-promise-all",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Promise all that returns { result: Result|Null, error: Error|Null } of promises",
   "main": "index.js",
   "scripts": {
