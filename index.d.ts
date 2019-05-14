@@ -5,6 +5,6 @@ export type SafePromiseAllResult<R,E> = {
 declare function safePromiseAll<R = any, E = any>(
   promises: Promise<R>[],
   unsafePromiseAll?: (promises: Promise<R>[]) => Promise<R[]>
-): Promise<SafePromiseAllResult<R,E>>
+): Promise<SafePromiseAllResult<R,E>[]>
 
 export default safePromiseAll
