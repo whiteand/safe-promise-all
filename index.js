@@ -19,7 +19,7 @@ const populateWithIndexes = (element, index) => ({ element, index })
  * @param {function(Promise[]): Promise} unsafePromiseAll
  * @returns {*} Promise.<Result[]> - that returns array of results of all promises
  */
-function promiseAllSafe (promises, unsafePromiseAll = promises => Promise.all(promises)) {
+function safePromiseAll (promises, unsafePromiseAll = promises => Promise.all(promises)) {
   if (!Array.isArray(promises)) {
     throw new TypeError('promises - must be an Promise[]')
   }
