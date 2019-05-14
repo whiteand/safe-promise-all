@@ -50,5 +50,5 @@ function safePromiseAll (promises, unsafePromiseAll = promises => Promise.all(pr
   return res
 }
 
-module.exports = promiseAllSafe
+module.exports = safePromiseAll
 
