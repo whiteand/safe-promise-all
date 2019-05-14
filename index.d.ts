@@ -1,4 +1,4 @@
-type SafePromiseAllResult<R,E> = {
+export type SafePromiseAllResult<R,E> = {
   result: R | null,
   error: E | null
 }
